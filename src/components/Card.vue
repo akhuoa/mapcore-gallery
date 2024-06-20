@@ -197,11 +197,17 @@ function calculateShowTooltip() {
         <img
           v-if="useDefaultImg"
           :src="defaultImg"
+          width="160"
+          height="160"
+          loading="lazy"
           :style="imageStyle"
         />
         <img
           v-else
           :src="thumbnail"
+          width="160"
+          height="160"
+          loading="lazy"
           alt="thumbnail loading ..."
           :style="imageStyle"
         />
@@ -299,6 +305,12 @@ function calculateShowTooltip() {
 
 .cursor-pointer {
   cursor: pointer;
+
+  > img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
 }
 
 .text-placeholder {
