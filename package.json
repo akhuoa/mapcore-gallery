@@ -7,6 +7,9 @@
     "*.json",
     "*.js"
   ],
+  "engines": {
+    "node": "^24.20.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ABI-Software/mapcore-gallery.git"
