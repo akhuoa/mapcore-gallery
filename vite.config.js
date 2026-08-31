@@ -43,13 +43,19 @@ export default defineConfig({
                 globals: {
                     vue: "Vue",
                 },
+                // keep css output name stable for the "./dist/style.css" export/import paths
+                assetFileNames: (assetInfo) =>
+                  assetInfo.name?.endsWith(".css")
+                    ? "style.css"
+                    : "assets/[name][extname]",
             },
         },
     },
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@use './src/assets/styles' as *;`
+              api: 'modern-compiler',
+              additionalData: `@use '@/assets/styles' as *;`
             }
         }
     }
