@@ -34,3 +34,9 @@ function datalinkClicked(data) {
     <Gallery :items="dataInput" @card-clicked="cardClicked" @datalink-clicked="datalinkClicked" />
   </div>
 </template>
+
+<style lang="scss">
+body {
+	font-family: $font-family;
+}
+</style>
