@@ -7,6 +7,9 @@
     "*.json",
     "*.js"
   ],
+  "engines": {
+    "node": "^24.20.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ABI-Software/mapcore-gallery.git"
@@ -73,5 +76,10 @@
     "@rollup/rollup-darwin-arm64": "4.63.0",
     "@rollup/rollup-linux-x64-gnu": "4.63.0",
     "@rollup/rollup-win32-x64-msvc": "4.63.0"
+  },
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "fsevents@2.3.3": true,
+    "esbuild@0.21.5": true
   }
 }
