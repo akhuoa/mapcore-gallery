@@ -5,85 +5,85 @@
  * To watch components changes for Vitepress on Dev Mode
  */
 
-import fs from 'fs'
-import path from 'path'
-import chokidar from 'chokidar'
+import fs from 'fs';
+import path from 'path';
+import chokidar from 'chokidar';
 // import { parser } from '@vuese/parser'
-import { parseSource } from 'vue-docgen-api'
-import { Render } from '@vuese/markdown-render'
+import { parseSource } from 'vue-docgen-api';
+import { Render } from '@vuese/markdown-render';
 
-const watchMode = process.argv.find((argv) => argv === 'watch')
+const watchMode = process.argv.find((argv) => argv === 'watch');
 
-const componentsDir = 'src/components'
-const components = ['Gallery.vue']
-const outputDir = 'docs/components'
+const componentsDir = 'src/components';
+const components = ['Gallery.vue'];
+const outputDir = 'docs/components';
 
 function generateMarkdown(file) {
-  const fileWithPath = `${componentsDir}/${file}`
-  const fileContent = fs.readFileSync(fileWithPath, 'utf-8')
+  const fileWithPath = `${componentsDir}/${file}`;
+  const fileContent = fs.readFileSync(fileWithPath, 'utf-8');
 
   try {
     // vuese parser doesn't work with composition api
     // const parserResult = parser(fileContent)
-    const parserResult = parseSource(fileContent, fileWithPath)
+    const parserResult = parseSource(fileContent, fileWithPath);
     parserResult.then((result) => {
-      const name = result.displayName
-      const desc = result.description
-      const props = result.props
+      const name = result.displayName;
+      const desc = result.description;
+      const props = result.props;
 
       // transform props to vuese styles
       props.forEach((prop) => {
-        prop.name = prop.name
-        prop.type = prop.type.name
-        prop.describe = [prop.description]
-        prop.default = prop.defaultValue.value.replaceAll('\n', '')
-      })
+        prop.name = prop.name;
+        prop.type = prop.type.name;
+        prop.describe = [prop.description];
+        prop.default = prop.defaultValue.value.replaceAll('\n', '');
+      });
 
       const parseResult = {
         name: name,
         componentDesc: {
-          default: [desc]
+          default: [desc],
         },
         props: props,
-      }
-      const r = new Render(parseResult)
-      const renderResult = r.render()
-      const markdownResult = r.renderMarkdown()
-      const markdownContent = markdownResult.content
-      const componentName = path.basename(fileWithPath, '.vue')
+      };
+      const r = new Render(parseResult);
+      const renderResult = r.render();
+      const markdownResult = r.renderMarkdown();
+      const markdownContent = markdownResult.content;
+      const componentName = path.basename(fileWithPath, '.vue');
 
       if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir)
+        fs.mkdirSync(outputDir);
       }
 
       fs.writeFile(`${outputDir}/${componentName}.md`, markdownContent, (err) => {
         if (err) {
-          console.error(`Error writing markdown file for ${componentName}`, err)
+          console.error(`Error writing markdown file for ${componentName}`, err);
         } else {
-          console.log(`Markdown file for ${componentName} is generated!`)
+          console.log(`Markdown file for ${componentName} is generated!`);
         }
-      })
-    })
-  } catch(e) {
-    console.error(e)
+      });
+    });
+  } catch (e) {
+    console.error(e);
   }
 }
 
 // To generate markdown files - one time
 components.forEach((component) => {
-  console.log(`Write markdown file for ${component} on first load.`)
-  generateMarkdown(component)
-})
+  console.log(`Write markdown file for ${component} on first load.`);
+  generateMarkdown(component);
+});
 
 // To watch component changes and generate markdown files
 if (watchMode) {
   const watcher = chokidar.watch(components, {
     cwd: componentsDir,
     ignoreInitial: true,
-  })
+  });
 
   watcher.on('change', (file) => {
-    console.log(`The component ${file} has changed!`)
-    generateMarkdown(file)
-  })
+    console.log(`The component ${file} has changed!`);
+    generateMarkdown(file);
+  });
 }

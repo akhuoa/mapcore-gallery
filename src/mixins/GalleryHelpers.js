@@ -1,5 +1,5 @@
-import axios from 'axios'
-import LogoSparcWavePrimary from '../assets/logo-sparc-wave-primary.svg'
+import axios from 'axios';
+import LogoSparcWavePrimary from '../assets/logo-sparc-wave-primary.svg';
 
 export default {
   //this mixin is not used by this code base but it can be used by other
@@ -7,7 +7,7 @@ export default {
   data() {
     return {
       defaultImg: LogoSparcWavePrimary,
-    }
+    };
   },
   methods: {
     async getRequest(url, params, timeout) {
@@ -16,7 +16,7 @@ export default {
         url,
         params,
         timeout,
-      })
+      });
     },
     /**
      * Returns a file path for S3.
@@ -26,8 +26,8 @@ export default {
      * @returns {String} full path to S3 file.
      */
     getS3FilePath(dataset_id, dataset_version, file_path) {
-      const encoded_file_path = encodeURIComponent(file_path)
-      return `${dataset_id}/${dataset_version}/files/${encoded_file_path}`
+      const encoded_file_path = encodeURIComponent(file_path);
+      return `${dataset_id}/${dataset_version}/files/${encoded_file_path}`;
     },
     /**
      * Find data path in the array that matches the provide path
@@ -35,16 +35,16 @@ export default {
     findEntryWithPathInArray(array, path) {
       if (path && array) {
         for (let i = 0; i < array.length; i++) {
-          if (path === array[i].dataset.path) return array[i]
+          if (path === array[i].dataset.path) return array[i];
         }
       }
-      return undefined
+      return undefined;
     },
     getThumbnailForPlot(plot, thumbnails) {
       if (thumbnails && plot) {
-        return this.findEntryWithPathInArray(thumbnails, plot.datacite.isSourceOf.path[0])
+        return this.findEntryWithPathInArray(thumbnails, plot.datacite.isSourceOf.path[0]);
       }
-      return undefined
+      return undefined;
     },
     /**
      * Use the scaffoldViews to help with finding the correct thumbnails.
@@ -52,27 +52,30 @@ export default {
      */
     getThumbnailForScaffold(scaffold, scaffoldViews, thumbnails, index) {
       if (thumbnails && thumbnails.length > 0) {
-        let thumbnail = undefined
+        let thumbnail = undefined;
         if (scaffold && scaffoldViews) {
-          const view = this.findEntryWithPathInArray(scaffoldViews, scaffold.datacite.isSourceOf.path[0])
+          const view = this.findEntryWithPathInArray(
+            scaffoldViews,
+            scaffold.datacite.isSourceOf.path[0],
+          );
           if (view) {
-            thumbnail = this.findEntryWithPathInArray(thumbnails, view.datacite.isSourceOf.path[0])
+            thumbnail = this.findEntryWithPathInArray(thumbnails, view.datacite.isSourceOf.path[0]);
           }
         }
         if (thumbnail) {
-          return thumbnail
+          return thumbnail;
         } else if (index < thumbnails.length) {
-          return thumbnails[index]
+          return thumbnails[index];
         }
       }
-      return undefined
+      return undefined;
     },
     getImageURLFromS3(apiEndpoint, info) {
-      let url = `${apiEndpoint}/s3-resource/${info.datasetId}/${info.datasetVersion}/files/${info.file_path}?encodeBase64=true`
+      let url = `${apiEndpoint}/s3-resource/${info.datasetId}/${info.datasetVersion}/files/${info.file_path}?encodeBase64=true`;
       if (info.s3Bucket) {
-        url = url + `&s3BucketName=${info.s3Bucket}`
+        url = url + `&s3BucketName=${info.s3Bucket}`;
       }
-      return url
+      return url;
     },
   },
-}
+};

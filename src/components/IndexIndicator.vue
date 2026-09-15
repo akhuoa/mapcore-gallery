@@ -8,9 +8,9 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-})
+});
 
-const emit = defineEmits(['clicked'])
+const emit = defineEmits(['clicked']);
 </script>
 
 <template>

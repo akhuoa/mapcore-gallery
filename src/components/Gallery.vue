@@ -1,18 +1,14 @@
-
 <script setup name="Gallery">
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
 
-import IndexIndicator from './IndexIndicator.vue'
-import Card from './Card.vue'
+import IndexIndicator from './IndexIndicator.vue';
+import Card from './Card.vue';
 
 function convertRemToPixels(rem) {
   if (typeof window !== 'undefined') {
-    return (
-      rem *
-      parseFloat(window.getComputedStyle(document.documentElement).fontSize)
-    )
+    return rem * parseFloat(window.getComputedStyle(document.documentElement).fontSize);
   }
-  return rem * 16
+  return rem * 16;
 }
 
 const props = defineProps({
@@ -22,7 +18,7 @@ const props = defineProps({
   items: {
     type: Array,
     default: () => {
-      return []
+      return [];
     },
   },
   /**
@@ -66,7 +62,7 @@ const props = defineProps({
   bodyStyle: {
     type: Object,
     default: () => {
-      return { padding: '20px', background: '#ffffff' }
+      return { padding: '20px', background: '#ffffff' };
     },
   },
   /**
@@ -75,7 +71,7 @@ const props = defineProps({
   bottomSpacer: {
     type: Object,
     default: () => {
-      return { minHeight: '4rem' }
+      return { minHeight: '4rem' };
     },
   },
   /**
@@ -84,7 +80,7 @@ const props = defineProps({
   imageContainerStyle: {
     type: Object,
     default: () => {
-      return {}
+      return {};
     },
   },
   /**
@@ -93,7 +89,7 @@ const props = defineProps({
   imageStyle: {
     type: Object,
     default: () => {
-      return {}
+      return {};
     },
   },
   // TODO: not in use
@@ -103,7 +99,7 @@ const props = defineProps({
       return {
         datasetVersion: -1,
         datasetId: -1,
-      }
+      };
     },
   },
   // TODO: not in use
@@ -118,90 +114,83 @@ const props = defineProps({
     type: String,
     default: 'always',
   },
-})
+});
 
 const emit = defineEmits(['card-clicked', 'datalink-clicked']);
 
-const count = ref(0)
-const currentIndex = ref(0)
-const controlHeight = ref(2)
-const controlWidth = ref(2)
+const count = ref(0);
+const currentIndex = ref(0);
+const controlHeight = ref(2);
+const controlWidth = ref(2);
 
 const itemCount = computed(() => {
-  return props.items.length
-})
+  return props.items.length;
+});
 const isPrevPossible = computed(() => {
-  return currentIndex.value > 0
-})
+  return currentIndex.value > 0;
+});
 const isNextPossible = computed(() => {
-  return currentIndex.value < itemCount.value - 1
-})
+  return currentIndex.value < itemCount.value - 1;
+});
 const cardHeight = computed(() => {
-  return 0.78 * props.cardWidth
-})
+  return 0.78 * props.cardWidth;
+});
 const cardLineWidth = computed(() => {
-  const cardSpacing = 0.25
-  return itemCount.value * (props.cardWidth + cardSpacing) - cardSpacing
-})
+  const cardSpacing = 0.25;
+  return itemCount.value * (props.cardWidth + cardSpacing) - cardSpacing;
+});
 const numberOfItemsVisible = computed(() => {
   // The maximum width we are allowed minus two buttons for next and previous
   // divided by the width of a card.
   // const n = itemCount.value - 1
-  const cardSpacingPx = convertRemToPixels(0.5)
-  const buttonPx = convertRemToPixels(2)
-  const cardWidthPx = convertRemToPixels(props.cardWidth)
-  const cardItems =
-    (props.maxWidth - 2 * buttonPx - 2 * cardSpacingPx) / (1.1 * cardWidthPx)
+  const cardSpacingPx = convertRemToPixels(0.5);
+  const buttonPx = convertRemToPixels(2);
+  const cardWidthPx = convertRemToPixels(props.cardWidth);
+  const cardItems = (props.maxWidth - 2 * buttonPx - 2 * cardSpacingPx) / (1.1 * cardWidthPx);
   //Display at least one item
-  return Math.max(1, Math.floor(cardItems))
-})
+  return Math.max(1, Math.floor(cardItems));
+});
 const canShowIndicatorBar = computed(() => {
-  const indicatorWidth = convertRemToPixels(1)
-  const indicatorAllowance =
-    props.maxWidth / (indicatorWidth * itemCount.value)
-  return (
-    props.showIndicatorBar && indicatorAllowance > 0.1 && itemCount.value > 1
-  )
-})
+  const indicatorWidth = convertRemToPixels(1);
+  const indicatorAllowance = props.maxWidth / (indicatorWidth * itemCount.value);
+  return props.showIndicatorBar && indicatorAllowance > 0.1 && itemCount.value > 1;
+});
 const valueAdjustment = computed(() => {
-  const halfWindow = Math.floor(numberOfItemsVisible.value / 2)
-  let valueAdjust = currentIndex.value - halfWindow
+  const halfWindow = Math.floor(numberOfItemsVisible.value / 2);
+  let valueAdjust = currentIndex.value - halfWindow;
   if (valueAdjust < 0) {
-    valueAdjust = 0
+    valueAdjust = 0;
   } else if (valueAdjust + numberOfItemsVisible.value > itemCount.value) {
-    valueAdjust = itemCount.value - numberOfItemsVisible.value
+    valueAdjust = itemCount.value - numberOfItemsVisible.value;
   }
-  return valueAdjust
-})
+  return valueAdjust;
+});
 const windowedItems = computed(() => {
-  let myArray = []
+  let myArray = [];
   for (let i = 0; i < numberOfItemsVisible.value; i++) {
-    myArray.push(props.items[i + valueAdjustment.value])
+    myArray.push(props.items[i + valueAdjustment.value]);
   }
-  return myArray
-})
+  return myArray;
+});
 
 function cardClicked(payload) {
-  emit('card-clicked', payload)
+  emit('card-clicked', payload);
 }
 function datalinkClicked(payload) {
   emit('datalink-clicked', payload);
 }
 function isActive(index) {
-  return (
-    currentIndex.value - valueAdjustment.value === index &&
-    props.highlightActive
-  )
+  return currentIndex.value - valueAdjustment.value === index && props.highlightActive;
 }
 function goNext() {
-  currentIndex.value += 1
+  currentIndex.value += 1;
 }
 function goPrev() {
-  currentIndex.value -= 1
+  currentIndex.value -= 1;
 }
 function indicatorClicked(index) {
   if (currentIndex.value !== index) {
-    currentIndex.value = index
+    currentIndex.value = index;
   }
 }
 
@@ -214,8 +203,8 @@ defineExpose({
   isActive,
   goNext,
   goPrev,
-  indicatorClicked
-})
+  indicatorClicked,
+});
 </script>
 
 <template>

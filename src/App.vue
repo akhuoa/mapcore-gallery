@@ -1,5 +1,5 @@
 <script setup name="App">
-import Gallery from './components/Gallery.vue'
+import Gallery from './components/Gallery.vue';
 
 const dataInput = [
   {
@@ -17,10 +17,10 @@ const dataInput = [
     type: 'data',
     link: 'https://sparc.science/',
   },
-]
+];
 
 function cardClicked(data) {
-  console.log('card-clicked', data)
+  console.log('card-clicked', data);
 }
 
 function datalinkClicked(data) {
@@ -37,6 +37,6 @@ function datalinkClicked(data) {
 
 <style lang="scss">
 body {
-	font-family: $font-family;
+  font-family: $font-family;
 }
 </style>

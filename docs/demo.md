@@ -37,7 +37,6 @@ const Gallery = defineClientComponent(() => {
 })
 </script>
 
-
 ## Code Preview
 
 ```js-vue

@@ -1,14 +1,14 @@
-import path from 'path'
-import { defineConfig } from 'vitepress'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import path from 'path';
+import { defineConfig } from 'vitepress';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
-const versionNumber = process.env.npm_package_version
+const versionNumber = process.env.npm_package_version;
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Gallery",
-  description: "API documentation for Gallery",
+  title: 'Gallery',
+  description: 'API documentation for Gallery',
   base: '/mapcore-gallery/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
@@ -16,46 +16,44 @@ export default defineConfig({
       { text: 'Home', link: '/' },
       {
         text: 'API Reference',
-        link: '/components/Gallery'
-      }
+        link: '/components/Gallery',
+      },
     ],
 
     sidebar: [
       {
         text: 'Live Demo',
-        link: '/demo'
+        link: '/demo',
       },
       {
         text: 'API Reference',
-        link: '/components/Gallery'
+        link: '/components/Gallery',
       },
       {
         text: 'Version',
         items: [
           {
-            text: `${versionNumber}`
-          }
-        ]
-      }
+            text: `${versionNumber}`,
+          },
+        ],
+      },
     ],
 
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/ABI-Software/mapcore-gallery' }
-    ]
+    socialLinks: [{ icon: 'github', link: 'https://github.com/ABI-Software/mapcore-gallery' }],
   },
   markdown: { attrs: { disable: true } },
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@use '../src/assets/styles' as *;`
+          additionalData: `@use '../src/assets/styles' as *;`,
         },
       },
     },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '../../src'),
-      }
+      },
     },
     plugins: [
       Components({
@@ -69,6 +67,6 @@ export default defineConfig({
           }),
         ],
       }),
-    ]
-  }
-})
+    ],
+  },
+});
