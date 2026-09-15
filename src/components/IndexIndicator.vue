@@ -1,5 +1,5 @@
 <script setup name="IndexIndicator">
-const props = defineProps({
+defineProps({
   count: {
     type: Number,
     default: 0,

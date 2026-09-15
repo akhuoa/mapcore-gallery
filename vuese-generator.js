@@ -33,7 +33,6 @@ function generateMarkdown(file) {
 
       // transform props to vuese styles
       props.forEach((prop) => {
-        prop.name = prop.name;
         prop.type = prop.type.name;
         prop.describe = [prop.description];
         prop.default = prop.defaultValue.value.replaceAll('\n', '');
@@ -47,7 +46,7 @@ function generateMarkdown(file) {
         props: props,
       };
       const r = new Render(parseResult);
-      const renderResult = r.render();
+      // const renderResult = r.render();
       const markdownResult = r.renderMarkdown();
       const markdownContent = markdownResult.content;
       const componentName = path.basename(fileWithPath, '.vue');

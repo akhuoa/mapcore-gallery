@@ -135,10 +135,10 @@ const isNextPossible = computed(() => {
 const cardHeight = computed(() => {
   return 0.78 * props.cardWidth;
 });
-const cardLineWidth = computed(() => {
-  const cardSpacing = 0.25;
-  return itemCount.value * (props.cardWidth + cardSpacing) - cardSpacing;
-});
+// const cardLineWidth = computed(() => {
+//   const cardSpacing = 0.25;
+//   return itemCount.value * (props.cardWidth + cardSpacing) - cardSpacing;
+// });
 const numberOfItemsVisible = computed(() => {
   // The maximum width we are allowed minus two buttons for next and previous
   // divided by the width of a card.

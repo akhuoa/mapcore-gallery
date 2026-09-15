@@ -43,4 +43,27 @@ export default [
       ],
     },
   },
+  {
+    // Card and Gallery are established single-word public API component names
+    files: ['src/components/Card.vue', 'src/components/Gallery.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+    },
+  },
+  {
+    // Test files use vitest/jest globals (describe, it, expect)
+    files: ['tests/**/*.{js,ts}'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+      },
+    },
+  },
 ];

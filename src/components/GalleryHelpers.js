@@ -36,7 +36,7 @@ export default function useS3() {
   }
   function getThumbnailForPlot(plot, thumbnails) {
     if (thumbnails && plot) {
-      return this.findEntryWithPathInArray(thumbnails, plot.datacite.isSourceOf.path[0]);
+      return findEntryWithPathInArray(thumbnails, plot.datacite.isSourceOf.path[0]);
     }
     return undefined;
   }
@@ -48,12 +48,9 @@ export default function useS3() {
     if (thumbnails && thumbnails.length > 0) {
       let thumbnail = undefined;
       if (scaffold && scaffoldViews) {
-        const view = this.findEntryWithPathInArray(
-          scaffoldViews,
-          scaffold.datacite.isSourceOf.path[0],
-        );
+        const view = findEntryWithPathInArray(scaffoldViews, scaffold.datacite.isSourceOf.path[0]);
         if (view) {
-          thumbnail = this.findEntryWithPathInArray(thumbnails, view.datacite.isSourceOf.path[0]);
+          thumbnail = findEntryWithPathInArray(thumbnails, view.datacite.isSourceOf.path[0]);
         }
       }
       if (thumbnail) {
@@ -87,7 +84,7 @@ export default function useS3() {
   function getImageInfoFromBiolucida(apiEndpoint, items, info) {
     const endpoint = `${apiEndpoint}/image/${info.id}`;
     const params = {};
-    this.getRequest(endpoint, params, 20000).then(
+    getRequest(endpoint, params, 20000).then(
       (response) => {
         let item = items.find((x) => x.id === info.id);
         const name = response.name;
@@ -102,7 +99,7 @@ export default function useS3() {
           info.fetchAttempts < 3
         ) {
           info.fetchAttempts += 1;
-          this.getImageInfoFromBiolucida(apiEndpoint, items, info);
+          getImageInfoFromBiolucida(apiEndpoint, items, info);
         }
 
         return Promise.reject('Maximum iterations reached.');
@@ -112,5 +109,13 @@ export default function useS3() {
   return {
     defaultImg,
     getRequest,
+    getS3FilePath,
+    findEntryWithPathInArray,
+    getThumbnailForPlot,
+    getThumbnailForScaffold,
+    getImageURLFromS3,
+    getSegmentationThumbnailURL,
+    getThumbnailURLFromBiolucida,
+    getImageInfoFromBiolucida,
   };
 }

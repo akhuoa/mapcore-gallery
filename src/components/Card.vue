@@ -3,7 +3,7 @@ import { ref, computed, watch, onUpdated, nextTick } from 'vue';
 import useS3 from './GalleryHelpers.js';
 
 function isValidHttpUrl(string) {
-  let url = undefined;
+  let url;
   try {
     url = new URL(string);
   } catch (_) {
@@ -15,8 +15,6 @@ function isValidHttpUrl(string) {
 const { defaultImg, getRequest } = useS3();
 const titleText = ref();
 
-const ro = ref(null);
-const triangleSize = ref(4);
 const thumbnail = ref(undefined);
 const useDefaultImg = ref(false);
 const disableTooltip = ref(false);
@@ -67,24 +65,9 @@ const emit = defineEmits(['card-clicked', 'datalink-clicked']);
 const isReady = computed(() => {
   return (
     props.data.title &&
-    ((thumbnail ? thumbnail.value : false) || useDefaultImg.value) &&
+    (thumbnail.value || useDefaultImg.value) &&
     (props.data.link || props.data.userData)
   );
-});
-const imageHeight = computed(() => {
-  return showCardDetails ? height * 0.525 : height;
-});
-const imageWidth = computed(() => {
-  return width - 2 * marginDetails;
-});
-const triangleHeight = computed(() => {
-  return height * 0.237;
-});
-const marginDetails = computed(() => {
-  return height * 0.076;
-});
-const typeIcon = computed(() => {
-  return showCardDetails ? height * 0.525 : height;
 });
 
 watch(
@@ -168,7 +151,7 @@ function calculateShowTooltip() {
     disableTooltip.value = true;
     tooltipCalculated.value = true;
   } else {
-    const ele = titleText;
+    const ele = titleText.value;
     //Check if title text is rendered yet
     if (ele && ele.offsetParent) {
       tooltipCalculated.value = true;
@@ -194,25 +177,6 @@ function calculateShowTooltip() {
       <div class="cursor-pointer" :style="imageContainerStyle" @click.prevent="cardClicked">
         <img v-if="useDefaultImg" :src="defaultImg" :style="imageStyle" />
         <img v-else :src="thumbnail" alt="thumbnail loading ..." :style="imageStyle" />
-      </div>
-      <div v-if="false" class="image-overlay">
-        <div
-          class="triangle-right-corner"
-          :style="`border-left-width: ${
-            triangleHeight * 1.2
-          }rem; border-top-width: ${triangleHeight}rem;`"
-          @click="openLinkInNewTab"
-        />
-        <el-tooltip class="item" :content="`View ${data.type}`" placement="left">
-          <img
-            class="triangle-icon"
-            :style="`height: ${triangleHeight * 0.25}rem;top: ${
-              triangleHeight * 0.15
-            }rem;right: ${triangleHeight * 0.15}rem`"
-            :src="typeIcon"
-            @click="openLinkInNewTab"
-          />
-        </el-tooltip>
       </div>
       <div v-if="showCardDetails" class="details">
         <p v-if="!data.hideType">
