@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: "Gallery"
-  text: "API documentation"
+  name: 'Gallery'
+  text: 'API documentation'
   tagline: Image gallery viewer
   actions:
     - theme: brand

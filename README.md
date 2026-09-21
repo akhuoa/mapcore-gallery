@@ -5,6 +5,7 @@ This component is now built with Vue3 and Vite, Vue2 is no longer maintained but
 [mapcore-gallery documentation](https://abi-software.github.io/mapcore-gallery/)
 
 #### In App.vue - (Options API)
+
 ```
 <template>
     <div>
@@ -25,7 +26,9 @@ export default {
 ```
 
 #### When using the mixin
+
 Contains the `defaultImg` source and the `getRequest` function for fetching the dataset images.
+
 ```
 <script>
 /* eslint-disable no-alert, no-console */
@@ -69,6 +72,7 @@ npm run lint
 The API documentation is developed with `vitepress` and `vuese`. Documentation pages are in the `docs` folder.
 
 ### To run in local development mode
+
 ```bash
 npm run docs:watch
 ```

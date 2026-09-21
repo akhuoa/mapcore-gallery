@@ -1,5 +1,5 @@
 <script setup name="IndexIndicator">
-const props = defineProps({
+defineProps({
   count: {
     type: Number,
     default: 0,
@@ -8,9 +8,9 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-})
+});
 
-const emit = defineEmits(['clicked'])
+const emit = defineEmits(['clicked']);
 </script>
 
 <template>

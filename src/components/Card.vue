@@ -1,26 +1,24 @@
 <script setup name="GalleryCard">
-import { ref, computed, watch, onUpdated, nextTick } from 'vue'
-import useS3 from './GalleryHelpers.js'
+import { ref, computed, watch, onUpdated, nextTick } from 'vue';
+import useS3 from './GalleryHelpers.js';
 
 function isValidHttpUrl(string) {
-  let url = undefined
+  let url;
   try {
-    url = new URL(string)
+    url = new URL(string);
   } catch (_) {
-    return false
+    return false;
   }
-  return url.protocol === 'http:' || url.protocol === 'https:'
+  return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
 const { defaultImg, getRequest } = useS3();
-const titleText = ref()
+const titleText = ref();
 
-const ro = ref(null)
-const triangleSize = ref(4)
-const thumbnail = ref(undefined)
-const useDefaultImg = ref(false)
-const disableTooltip = ref(false)
-const tooltipCalculated = ref(false)
+const thumbnail = ref(undefined);
+const useDefaultImg = ref(false);
+const disableTooltip = ref(false);
+const tooltipCalculated = ref(false);
 
 const props = defineProps({
   data: {
@@ -41,92 +39,79 @@ const props = defineProps({
   bodyStyle: {
     type: Object,
     default: () => {
-      return { padding: '20px', background: '#ffffff' }
+      return { padding: '20px', background: '#ffffff' };
     },
   },
   imageStyle: {
     type: Object,
     default: () => {
-      return {}
+      return {};
     },
   },
   imageContainerStyle: {
     type: Object,
     default: () => {
-      return {}
+      return {};
     },
   },
   shadow: {
     type: String,
     default: 'always',
   },
-})
+});
 
 const emit = defineEmits(['card-clicked', 'datalink-clicked']);
 
 const isReady = computed(() => {
   return (
     props.data.title &&
-    ((thumbnail ? thumbnail.value : false) || useDefaultImg.value) &&
+    (thumbnail.value || useDefaultImg.value) &&
     (props.data.link || props.data.userData)
-  )
-})
-const imageHeight = computed(() => {
-  return showCardDetails ? height * 0.525 : height
-})
-const imageWidth = computed(() => {
-  return width - 2 * marginDetails
-})
-const triangleHeight = computed(() => {
-  return height * 0.237
-})
-const marginDetails = computed(() => {
-  return height * 0.076
-})
-const typeIcon = computed(() => {
-  return showCardDetails ? height * 0.525 : height
-})
+  );
+});
 
 watch(
-  () => props.data, () => {
-    thumbnail.value = undefined
-    useDefaultImg.value = false
-    tooltipCalculated.value = false
-    disableTooltip.value = false
+  () => props.data,
+  () => {
+    thumbnail.value = undefined;
+    useDefaultImg.value = false;
+    tooltipCalculated.value = false;
+    disableTooltip.value = false;
     if (props.data.thumbnail) {
       if (isValidHttpUrl(props.data.thumbnail) && props.data.mimetype) {
-        downloadThumbnail(props.data.thumbnail, { fetchAttempts: 0 })
+        downloadThumbnail(props.data.thumbnail, { fetchAttempts: 0 });
       } else {
-        thumbnail.value = props.data.thumbnail
+        thumbnail.value = props.data.thumbnail;
       }
     } else {
-      useDefaultImg.value = true
+      useDefaultImg.value = true;
     }
     //Dynamically check title length to determine if popover should be shown
     nextTick(() => {
-      calculateShowTooltip()
-    })
-  }, { immediate: true }
-)
+      calculateShowTooltip();
+    });
+  },
+  { immediate: true },
+);
 
 onUpdated(() => {
   nextTick(() => {
-    calculateShowTooltip()
-  })
-})
+    calculateShowTooltip();
+  });
+});
 
 function cardClicked() {
   if (props.data.link) {
-    const link = document.createElement('a')
-    link.href = props.data.link
-    link.target = '_blank'
-    document.body.appendChild(link)
-    link.click()
+    const link = document.createElement('a');
+    link.href = props.data.link;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
     emit('datalink-clicked', props.data.link);
-    link.remove()
+    link.remove();
   }
   if (props.data.userData) {
-    emit('card-clicked', props.data.userData)
+    emit('card-clicked', props.data.userData);
   }
 }
 /**
@@ -135,14 +120,14 @@ function cardClicked() {
 function downloadThumbnail(url, info) {
   getRequest(url, {}, 11000).then(
     (response) => {
-      let data = response.data
+      let data = response.data;
       if (typeof data === 'string' && data.startsWith('data:')) {
-        thumbnail.value = response.data
+        thumbnail.value = response.data;
       } else {
         if (props.data.mimetype) {
-          thumbnail.value = `data:${props.data.mimetype};base64,${response.data}`
+          thumbnail.value = `data:${props.data.mimetype};base64,${response.data}`;
         } else {
-          thumbnail.value = response.data
+          thumbnail.value = response.data;
         }
       }
     },
@@ -152,30 +137,30 @@ function downloadThumbnail(url, info) {
         reason.message.includes('exceeded') &&
         info.fetchAttempts < 3
       ) {
-        info.fetchAttempts += 1
-        downloadThumbnail(url, info)
+        info.fetchAttempts += 1;
+        downloadThumbnail(url, info);
       } else {
-        useDefaultImg.value = true
+        useDefaultImg.value = true;
       }
-    }
-  )
+    },
+  );
 }
 //dynamically calculate if tooltip is required
 function calculateShowTooltip() {
   if (props.data.hideTitle) {
-    disableTooltip.value = true
-    tooltipCalculated.value = true
+    disableTooltip.value = true;
+    tooltipCalculated.value = true;
   } else {
-    const ele = titleText
+    const ele = titleText.value;
     //Check if title text is rendered yet
     if (ele && ele.offsetParent) {
-      tooltipCalculated.value = true
-      if (ele.offsetWidth >= ele.scrollWidth) disableTooltip.value = true
-      else disableTooltip.value = false
+      tooltipCalculated.value = true;
+      if (ele.offsetWidth >= ele.scrollWidth) disableTooltip.value = true;
+      else disableTooltip.value = false;
     } else {
       //text not rendered yet
-      if (props.data.title.length > 20) disableTooltip.value = false
-      else disableTooltip.value = true
+      if (props.data.title.length > 20) disableTooltip.value = false;
+      else disableTooltip.value = true;
     }
   }
 }
@@ -189,45 +174,9 @@ function calculateShowTooltip() {
     class="card"
   >
     <div v-loading="!isReady">
-      <div
-        class="cursor-pointer"
-        :style="imageContainerStyle"
-        @click.prevent="cardClicked"
-      >
-        <img
-          v-if="useDefaultImg"
-          :src="defaultImg"
-          :style="imageStyle"
-        />
-        <img
-          v-else
-          :src="thumbnail"
-          alt="thumbnail loading ..."
-          :style="imageStyle"
-        />
-      </div>
-      <div v-if="false" class="image-overlay">
-        <div
-          class="triangle-right-corner"
-          :style="`border-left-width: ${
-            triangleHeight * 1.2
-          }rem; border-top-width: ${triangleHeight}rem;`"
-          @click="openLinkInNewTab"
-        />
-        <el-tooltip
-          class="item"
-          :content="`View ${data.type}`"
-          placement="left"
-        >
-          <img
-            class="triangle-icon"
-            :style="`height: ${triangleHeight * 0.25}rem;top: ${
-              triangleHeight * 0.15
-            }rem;right: ${triangleHeight * 0.15}rem`"
-            :src="typeIcon"
-            @click="openLinkInNewTab"
-          />
-        </el-tooltip>
+      <div class="cursor-pointer" :style="imageContainerStyle" @click.prevent="cardClicked">
+        <img v-if="useDefaultImg" :src="defaultImg" :style="imageStyle" />
+        <img v-else :src="thumbnail" alt="thumbnail loading ..." :style="imageStyle" />
       </div>
       <div v-if="showCardDetails" class="details">
         <p v-if="!data.hideType">
@@ -243,14 +192,10 @@ function calculateShowTooltip() {
           virtual-triggering
         />
         <!--use v-show here to make sure el popover always have a starting location -->
-        <p
-          v-show="!data.hideTitle"
-          ref="titleText"
-          class="title"
-        >
+        <p v-show="!data.hideTitle" ref="titleText" class="title">
           {{ data.title }}
         </p>
-        <p v-show="data.hideTitle" class="title text-placeholder"/>
+        <p v-show="data.hideTitle" class="title text-placeholder" />
         <el-button class="button" @click.prevent="cardClicked" size="large">
           View {{ data.type }}
         </el-button>
