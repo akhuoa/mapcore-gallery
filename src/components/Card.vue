@@ -176,7 +176,13 @@ function calculateShowTooltip() {
     <div v-loading="!isReady">
       <div class="cursor-pointer" :style="imageContainerStyle" @click.prevent="cardClicked">
         <img v-if="useDefaultImg" :src="defaultImg" :style="imageStyle" />
-        <img v-else :src="thumbnail" alt="thumbnail loading ..." crossorigin="anonymous" :style="imageStyle" />
+        <img
+          v-else
+          :src="thumbnail"
+          alt="thumbnail loading ..."
+          crossorigin="anonymous"
+          :style="imageStyle"
+        />
       </div>
       <div v-if="showCardDetails" class="details">
         <p v-if="!data.hideType">
