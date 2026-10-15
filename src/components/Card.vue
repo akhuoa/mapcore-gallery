@@ -58,7 +58,14 @@ const props = defineProps({
     type: String,
     default: 'always',
   },
+  crossorigin: {
+    type: String,
+    default: 'anonymous',
+  },
 });
+
+// Priority: data.crossorigin > prop > 'anonymous'
+const crossorigin = computed(() => props.data.crossorigin || props.crossorigin || 'anonymous');
 
 const emit = defineEmits(['card-clicked', 'datalink-clicked']);
 
@@ -180,7 +187,7 @@ function calculateShowTooltip() {
           v-else
           :src="thumbnail"
           alt="thumbnail loading ..."
-          crossorigin="anonymous"
+          :crossorigin="crossorigin"
           :style="imageStyle"
         />
       </div>
