@@ -114,6 +114,13 @@ const props = defineProps({
     type: String,
     default: 'always',
   },
+  /**
+   * The crossorigin attribute for card images (can be overridden per item via data.crossorigin).
+   */
+  crossorigin: {
+    type: String,
+    default: 'anonymous',
+  },
 });
 
 const emit = defineEmits(['card-clicked', 'datalink-clicked']);
@@ -236,6 +243,7 @@ defineExpose({
             :height="cardHeight"
             :shadow="shadow"
             :show-card-details="showCardDetails"
+            :crossorigin="crossorigin"
             @card-clicked="cardClicked"
             @datalink-clicked="datalinkClicked"
           />

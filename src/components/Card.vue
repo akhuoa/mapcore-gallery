@@ -58,7 +58,14 @@ const props = defineProps({
     type: String,
     default: 'always',
   },
+  crossorigin: {
+    type: String,
+    default: 'anonymous',
+  },
 });
+
+// Priority: data.crossorigin > prop > 'anonymous'
+const crossorigin = computed(() => props.data.crossorigin || props.crossorigin || 'anonymous');
 
 const emit = defineEmits(['card-clicked', 'datalink-clicked']);
 
@@ -176,7 +183,13 @@ function calculateShowTooltip() {
     <div v-loading="!isReady">
       <div class="cursor-pointer" :style="imageContainerStyle" @click.prevent="cardClicked">
         <img v-if="useDefaultImg" :src="defaultImg" :style="imageStyle" />
-        <img v-else :src="thumbnail" alt="thumbnail loading ..." :style="imageStyle" />
+        <img
+          v-else
+          :src="thumbnail"
+          alt="thumbnail loading ..."
+          :crossorigin="crossorigin"
+          :style="imageStyle"
+        />
       </div>
       <div v-if="showCardDetails" class="details">
         <p v-if="!data.hideType">
